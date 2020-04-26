@@ -11,6 +11,7 @@ public class playerController : MonoBehaviour
     public LayerMask ground;
     public Collider2D coll;
     public int cherry=0;
+    public int jumpcheck=0;
     
 
     // Start is called before the first frame update
@@ -33,18 +34,32 @@ public class playerController : MonoBehaviour
         float facedirection = Input.GetAxisRaw("Horizontal");
         //水平上给刚体赋予移动力
         rb.velocity = new Vector2(horizontalmove * speed * Time.deltaTime, rb.velocity.y);
+
         //人物移动
         if(facedirection != 0)
         {
             transform.localScale = new Vector3(facedirection, 1, 1);
         }
+
         //人物移动动画
         anim.SetFloat("running",Mathf.Abs(facedirection));
-        //人物跳跃
-        if (Input.GetButtonDown("Jump"))
+
+        //趴姿动画
+        if(Input.GetKey("s"))//这里采用了直接检测是否按下S键的方法，注意改键问题
         {
+            anim.SetBool("crouching",true);
+        }else if(anim.GetBool("crouching") && Input.GetKeyUp("s"))
+        {
+            anim.SetBool("crouching",false);
+        }
+
+        //人物跳跃
+        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
+        {
+            jumpcheck++;
             rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
             anim.SetBool("jumping",true);
+            anim.SetBool("crouching",false);
         }
         
     }
@@ -57,6 +72,7 @@ public class playerController : MonoBehaviour
             {
                 anim.SetBool("jumping",false);
                 anim.SetBool("falling",true);
+                
             }
         }
         else if(coll.IsTouchingLayers(ground))//触碰地面检测
