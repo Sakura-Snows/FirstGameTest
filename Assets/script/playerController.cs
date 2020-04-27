@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+//Version Record V0.0.1-Alpha
 public class playerController : MonoBehaviour
 {
+    //人物控制类
     [SerializeField]private Rigidbody2D rb;
     [SerializeField]private Animator anim;
+    //物理判定类
     public float speed;
     public float jumpforce;
     public LayerMask ground;
     public Collider2D coll;
-    public int cherry=0;
+    public int cherry = 0;
+    public int Gem = 0;
     public int jumpcheck=0;
-    
+    //UI类
+    public Text CherryNum;
+    public Text GemNum;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +54,7 @@ public class playerController : MonoBehaviour
         if(Input.GetKey("s"))//这里采用了直接检测是否按下S键的方法，注意改键问题
         {
             anim.SetBool("crouching",true);
-        }else if(anim.GetBool("crouching") && Input.GetKeyUp("s"))
+        }else if(Input.GetKeyUp("s") )          //此处有bug,在引擎内选中人物项时功能正常，选中其他层时无法正常回到站立动画，具体情况带游戏初版导出测试  Alpha V0.0.1
         {
             anim.SetBool("crouching",false);
         }
@@ -87,6 +93,15 @@ public class playerController : MonoBehaviour
         {
             Destroy(other.gameObject);
             cherry++;
+            CherryNum.text = cherry.ToString();
+        }
+        if(other.tag == "Gem")
+        {
+            Destroy(other.gameObject);
+            Gem++;
+            GemNum.text = Gem.ToString();
+
         }
     }
+    
 }
