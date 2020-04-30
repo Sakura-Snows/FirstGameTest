@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//Version Record V0.0.1-Alpha
+//Version Record V0.0.2-Alpha
 public class playerController : MonoBehaviour
 {
     //人物控制类
     [SerializeField]private Rigidbody2D rb;
     [SerializeField]private Animator anim;
+    private bool isHurt;
     //物理判定类
     public float speed;
     public float jumpforce;
@@ -30,7 +31,10 @@ public class playerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate() 
     {
-        Movement();
+        if(isHurt == false)
+        {
+            Movement();
+        }
         SwitchAnimation();
     }
 
@@ -70,7 +74,7 @@ public class playerController : MonoBehaviour
         
     }
 
-    void SwitchAnimation()//跳跃变换函数
+    void SwitchAnimation()//动画变换函数
     {
         if(anim.GetBool("jumping"))
         {
@@ -79,6 +83,15 @@ public class playerController : MonoBehaviour
                 anim.SetBool("jumping",false);
                 anim.SetBool("falling",true);
                 
+            }
+        }else if(isHurt)//插入收到伤害时的动画效果
+        {
+            anim.SetBool("hurt",true);
+            if(Mathf.Abs(rb.velocity.x) < 0.1f)
+            {
+                anim.SetBool("hurt",false);
+                anim.SetBool("idle",true);
+                isHurt = false;
             }
         }
         else if(coll.IsTouchingLayers(ground))//触碰地面检测
@@ -102,6 +115,28 @@ public class playerController : MonoBehaviour
             GemNum.text = Gem.ToString();
 
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)//敌人的控制类
+    {   
+        if(other.gameObject.tag == "Forg")//消灭敌人的方法和碰撞敌人产生的效果
+        {
+            if(anim.GetBool("falling"))
+            {
+                Destroy(other.gameObject);
+                rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
+                anim.SetBool("jumping",true);
+                anim.SetBool("crouching",false);
+            }else if(transform.position.x < other.transform.position.x)
+            {
+                rb.velocity = new Vector2(-5,rb.velocity.y);
+                isHurt = true;
+            }else if(transform.position.x > other.transform.position.x)
+            {
+                rb.velocity = new Vector2(5,rb.velocity.y);
+                isHurt = true;
+            }
+        }      
     }
     
 }

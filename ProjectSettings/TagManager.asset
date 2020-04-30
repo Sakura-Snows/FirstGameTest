@@ -6,6 +6,7 @@ TagManager:
   tags:
   - collection
   - Gem
+  - Forg
   layers:
   - Default
   - TransparentFX
