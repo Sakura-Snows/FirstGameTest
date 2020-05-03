@@ -47,6 +47,7 @@
   <ItemGroup>
      <Compile Include="Assets\script\CameraController.cs" />
      <Compile Include="Assets\script\PlayerMovementController.cs" />
+     <Compile Include="Assets\script\enemy_Frog.cs" />
      <Compile Include="Assets\script\playerController.cs" />
  <Reference Include="UnityEngine">
  <HintPath>D:/unity/2019.3.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -591,6 +592,10 @@
       <Project>{5df3f3f2-81be-b34a-043a-80cdfe5e1135}</Project>
       <Name>Unity.Timeline.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Cinemachine.csproj">
+      <Project>{ded8fd92-e667-69a5-e9cd-24aee7a2263b}</Project>
+      <Name>Cinemachine</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.VSCode.Editor.csproj">
       <Project>{5d41668b-aa28-7025-a907-c30ded647f85}</Project>
       <Name>Unity.VSCode.Editor</Name>
@@ -623,6 +628,10 @@
       <Project>{ab007f80-16d6-3970-6c64-f812dfa772c6}</Project>
       <Name>Unity.2D.Tilemap.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="com.unity.cinemachine.editor.csproj">
+      <Project>{ca94c10f-64eb-43a2-35b7-c9ad928bee16}</Project>
+      <Name>com.unity.cinemachine.editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{9d3bab97-9bbb-f3c4-10df-661c66e8b25a}</Project>
       <Name>Unity.TextMeshPro</Name>
@@ -630,14 +639,6 @@
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{d8f08cc3-d60a-8cc1-348b-b84bbcfae60c}</Project>
       <Name>UnityEditor.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="Cinemachine.csproj">
-      <Project>{ded8fd92-e667-69a5-e9cd-24aee7a2263b}</Project>
-      <Name>Cinemachine</Name>
-    </ProjectReference>
-    <ProjectReference Include="com.unity.cinemachine.editor.csproj">
-      <Project>{ca94c10f-64eb-43a2-35b7-c9ad928bee16}</Project>
-      <Name>com.unity.cinemachine.editor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
