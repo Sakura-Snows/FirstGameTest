@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//Version Record V0.0.2-Alpha
+//Version Record V0.0.4-Alpha
 public class playerController : MonoBehaviour
 {
     //人物控制类
@@ -58,7 +58,7 @@ public class playerController : MonoBehaviour
         if(Input.GetKey("s"))//这里采用了直接检测是否按下S键的方法，注意改键问题
         {
             anim.SetBool("crouching",true);
-        }else if(Input.GetKeyUp("s") )          //此处有bug,在引擎内选中人物项时功能正常，选中其他层时无法正常回到站立动画，具体情况带游戏初版导出测试  Alpha V0.0.1
+        }else if(Input.GetKeyUp("s") )          //注：此处有bug,在引擎内选中人物项时功能正常，选中其他层时无法正常回到站立动画，具体情况带游戏初版导出测试  Alpha V0.0.1
         {
             anim.SetBool("crouching",false);
         }
@@ -76,6 +76,11 @@ public class playerController : MonoBehaviour
 
     void SwitchAnimation()//动画变换函数
     {
+        if(Mathf.Abs(rb.velocity.y) > 5.0f && !coll.IsTouchingLayers(ground))//实现人物自然掉落的动画  注：此处判定引发消灭敌人的BUG，人物从斜坡下落时处于掉落状态，碰撞敌人将直接消灭对象。需重写敌人消灭判定 Alpha V0.0.4
+        {
+            anim.SetBool("falling",true);
+            anim.SetBool("natureFall",true);
+        }
         if(anim.GetBool("jumping"))
         {
             if(rb.velocity.y<0)
@@ -119,7 +124,7 @@ public class playerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)//敌人的控制类
     {   
-        if(other.gameObject.tag == "Forg")//消灭敌人的方法和碰撞敌人产生的效果
+        if(other.gameObject.tag == "Forg")//消灭敌人的方法和碰撞敌人产生的效果 
         {
             if(anim.GetBool("falling"))
             {
@@ -127,7 +132,7 @@ public class playerController : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
                 anim.SetBool("jumping",true);
                 anim.SetBool("crouching",false);
-            }else if(transform.position.x < other.transform.position.x)
+            }else if(transform.position.x < other.transform.position.x)//实现与敌人碰撞时受伤的效果
             {
                 rb.velocity = new Vector2(-5,rb.velocity.y);
                 isHurt = true;

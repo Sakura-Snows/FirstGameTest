@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7377609219480107657}
   - component: {fileID: 7377609219480107656}
   - component: {fileID: 7377609219480107660}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Frog
   m_TagString: Forg
   m_Icon: {fileID: 0}
@@ -158,6 +158,7 @@ MonoBehaviour:
   leftpoint: {fileID: 7377609220253792562}
   rightpoint: {fileID: 7377609219870697701}
   Speed: 5
+  jumpForce: 0
 --- !u!1 &7377609219870697700
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,7 +168,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7377609219870697701}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: right
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -197,7 +198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7377609220253792562}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: left
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
