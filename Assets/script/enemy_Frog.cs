@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class enemy_Frog : MonoBehaviour
+public class enemy_Frog : enemy_Controller
 {
 
     private Rigidbody2D rb;
     public Transform leftpoint,rightpoint;
-    private Animator anim;
+ /* private Animator anim; */
     private Collider2D coll;
     public LayerMask ground;
     public float Speed,jumpForce;
@@ -15,10 +15,11 @@ public class enemy_Frog : MonoBehaviour
     private float leftx,rightx;
     
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()//重写父类
     {
+        base.Start();
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
+        //anim = GetComponent<Animator>();
         coll = GetComponent<Collider2D>();
 
         transform.DetachChildren();
@@ -65,7 +66,7 @@ public class enemy_Frog : MonoBehaviour
         }
     }
 
-    void switchAnimation()
+    void switchAnimation()//变换动画，用于改变跳跃后是否切换为下落的动画
     {
         if(anim.GetBool("jumping"))
         {
@@ -80,4 +81,5 @@ public class enemy_Frog : MonoBehaviour
             anim.SetBool("falling",false);
         }
     }
+    
 }

@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//Version Record V0.0.4-Alpha
+//Version Record V0.0.5-Alpha
 public class playerController : MonoBehaviour
 {
     //人物控制类
     [SerializeField]private Rigidbody2D rb;
     [SerializeField]private Animator anim;
     private bool isHurt;
+    public AudioSource jumpAudio,hurtAudio,collectionAudio;
     //物理判定类
+    [Space]
     public float speed;
     public float jumpforce;
     public LayerMask ground;
@@ -18,6 +20,7 @@ public class playerController : MonoBehaviour
     public int Gem = 0;
     public int jumpcheck=0;
     //UI类
+    [Space]
     public Text CherryNum;
     public Text GemNum;
 
@@ -68,6 +71,7 @@ public class playerController : MonoBehaviour
         {
             jumpcheck++;
             rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
+            jumpAudio.Play();
             anim.SetBool("jumping",true);
             anim.SetBool("crouching",false);
         }
@@ -109,12 +113,14 @@ public class playerController : MonoBehaviour
     {
         if(other.tag == "collection")
         {
+            collectionAudio.Play();
             Destroy(other.gameObject);
             cherry++;
             CherryNum.text = cherry.ToString();
         }
         if(other.tag == "Gem")
         {
+            collectionAudio.Play();
             Destroy(other.gameObject);
             Gem++;
             GemNum.text = Gem.ToString();
@@ -124,21 +130,24 @@ public class playerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)//敌人的控制类
     {   
-        if(other.gameObject.tag == "Forg")//消灭敌人的方法和碰撞敌人产生的效果 
+        if(other.gameObject.tag == "enemy")//消灭敌人的方法和碰撞敌人产生的效果 
         {
+            enemy_Controller enemy = other.gameObject.GetComponent<enemy_Controller>();//申明父类
             if(anim.GetBool("falling"))
             {
-                Destroy(other.gameObject);
+                enemy.JumpOn();//用父类完成物体销毁
                 rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
                 anim.SetBool("jumping",true);
                 anim.SetBool("crouching",false);
             }else if(transform.position.x < other.transform.position.x)//实现与敌人碰撞时受伤的效果
             {
                 rb.velocity = new Vector2(-5,rb.velocity.y);
+                hurtAudio.Play();
                 isHurt = true;
             }else if(transform.position.x > other.transform.position.x)
             {
                 rb.velocity = new Vector2(5,rb.velocity.y);
+                hurtAudio.Play();
                 isHurt = true;
             }
         }      

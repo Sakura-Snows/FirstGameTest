@@ -45,10 +45,16 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Zero Rare\Retro Sound Effects\Demo\Demo.cs" />
      <Compile Include="Assets\script\CameraController.cs" />
+     <Compile Include="Assets\script\Dialog_Dor.cs" />
      <Compile Include="Assets\script\PlayerMovementController.cs" />
+     <Compile Include="Assets\script\dialog_Animation_Controller.cs" />
+     <Compile Include="Assets\script\enemy_Controller.cs" />
      <Compile Include="Assets\script\enemy_Frog.cs" />
+     <Compile Include="Assets\script\enemy_eagle.cs" />
      <Compile Include="Assets\script\playerController.cs" />
+     <None Include="Assets\CasualGameBGM05\ReadMe.txt" />
  <Reference Include="UnityEngine">
  <HintPath>D:/unity/2019.3.4f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
