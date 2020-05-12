@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//Version Record V0.0.5-Alpha
+//Version Record V0.0.6-Alpha
 public class playerController : MonoBehaviour
 {
     //人物控制类
@@ -16,9 +16,12 @@ public class playerController : MonoBehaviour
     public float jumpforce;
     public LayerMask ground;
     public Collider2D coll;
+    public Collider2D disColl;
     public int cherry = 0;
     public int Gem = 0;
     public int jumpcheck=0;
+    public Transform cellingCheck;
+    private bool headCheck = false;
     //UI类
     [Space]
     public Text CherryNum;
@@ -46,7 +49,7 @@ public class playerController : MonoBehaviour
         float horizontalmove = Input.GetAxis("Horizontal");
         float facedirection = Input.GetAxisRaw("Horizontal");
         //水平上给刚体赋予移动力
-        rb.velocity = new Vector2(horizontalmove * speed * Time.deltaTime, rb.velocity.y);
+        rb.velocity = new Vector2(horizontalmove * speed * Time.fixedDeltaTime, rb.velocity.y);
 
         //人物移动
         if(facedirection != 0)
@@ -58,24 +61,62 @@ public class playerController : MonoBehaviour
         anim.SetFloat("running",Mathf.Abs(facedirection));
 
         //趴姿动画
-        if(Input.GetKey("s"))//这里采用了直接检测是否按下S键的方法，注意改键问题
+        crouch();//调用下面的趴姿函数
+        /*
+        if(Input.GetKey(KeyCode.S))
         {
             anim.SetBool("crouching",true);
-        }else if(Input.GetKeyUp("s") )          //注：此处有bug,在引擎内选中人物项时功能正常，选中其他层时无法正常回到站立动画，具体情况带游戏初版导出测试  Alpha V0.0.1
+        }else if(Input.GetKeyUp(KeyCode.S) )          //注：此处有bug,在引擎内选中人物项时功能正常，选中其他层时无法正常回到站立动画，具体情况带游戏初版导出测试  Alpha V0.0.1
         {
             anim.SetBool("crouching",false);
         }
-
+        */
         //人物跳跃
         if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
         {
             jumpcheck++;
-            rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
+            rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.fixedDeltaTime);
             jumpAudio.Play();
             anim.SetBool("jumping",true);
             anim.SetBool("crouching",false);
         }
         
+    }
+
+    void crouch()//趴姿函数，实现自动站立，bug依然存在
+    {
+        if(Input.GetButtonDown("crouch"))
+        {
+            disColl.enabled = false;
+            anim.SetBool("crouching",true);
+        }else if(Input.GetButtonUp("crouch"))
+        {
+            headCheck = true;
+        }
+        if(headCheck)
+        {
+            if(!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))
+            {
+                disColl.enabled = true;
+                anim.SetBool("crouching",false);
+                headCheck = false;
+            }
+        }
+
+        /*无自动站立功能
+        if(!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))
+        {
+            if(Input.GetButtonDown("crouch"))
+            {
+                anim.SetBool("crouching",true);
+                disColl.enabled = false;
+            }else if(Input.GetButtonUp("crouch"))
+            {
+                anim.SetBool("crouching",false);
+                disColl.enabled = true;
+            }
+        }
+        */
     }
 
     void SwitchAnimation()//动画变换函数
@@ -136,7 +177,7 @@ public class playerController : MonoBehaviour
             if(anim.GetBool("falling"))
             {
                 enemy.JumpOn();//用父类完成物体销毁
-                rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
+                rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.fixedDeltaTime);
                 anim.SetBool("jumping",true);
                 anim.SetBool("crouching",false);
             }else if(transform.position.x < other.transform.position.x)//实现与敌人碰撞时受伤的效果
