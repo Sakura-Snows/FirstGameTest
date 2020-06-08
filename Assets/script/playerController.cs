@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-//Version Record V0.0.6-Alpha
+using UnityEngine.SceneManagement;
+//Version Record V0.6.8-Alpha TimeVersion Start on 2020-6-8
 public class playerController : MonoBehaviour
 {
     //人物控制类
@@ -67,7 +68,7 @@ public class playerController : MonoBehaviour
         {
             anim.SetBool("crouching",true);
         }else if(Input.GetKeyUp(KeyCode.S) )          //注：此处有bug,在引擎内选中人物项时功能正常，选中其他层时无法正常回到站立动画，具体情况带游戏初版导出测试  Alpha V0.0.1
-        {
+        {                                             // ↑ 注：bug已修复，见下面趴姿函数
             anim.SetBool("crouching",false);
         }
         */
@@ -83,13 +84,13 @@ public class playerController : MonoBehaviour
         
     }
 
-    void crouch()//趴姿函数，实现自动站立，bug依然存在
+    void crouch()//趴姿函数，实现自动站立
     {
-        if(Input.GetButtonDown("crouch"))
+        if(Input.GetButton("crouch"))
         {
             disColl.enabled = false;
             anim.SetBool("crouching",true);
-        }else if(Input.GetButtonUp("crouch"))
+        }else
         {
             headCheck = true;
         }
@@ -150,6 +151,7 @@ public class playerController : MonoBehaviour
         }
     }
 
+    //碰撞器部分
     private void OnTriggerEnter2D(Collider2D other) //收集品触碰检测
     {
         if(other.tag == "collection")
@@ -166,6 +168,11 @@ public class playerController : MonoBehaviour
             Gem++;
             GemNum.text = Gem.ToString();
 
+        }
+        if(other.tag == "DeadLine")//添加角色死亡条件碰撞检测
+        {
+            GetComponent<AudioSource>().enabled = false;
+            Invoke("Restart",2f);
         }
     }
 
@@ -185,6 +192,7 @@ public class playerController : MonoBehaviour
                 rb.velocity = new Vector2(-5,rb.velocity.y);
                 hurtAudio.Play();
                 isHurt = true;
+                
             }else if(transform.position.x > other.transform.position.x)
             {
                 rb.velocity = new Vector2(5,rb.velocity.y);
@@ -193,5 +201,9 @@ public class playerController : MonoBehaviour
             }
         }      
     }
-    
+
+    private void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }

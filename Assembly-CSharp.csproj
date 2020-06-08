@@ -48,6 +48,7 @@
      <Compile Include="Assets\Zero Rare\Retro Sound Effects\Demo\Demo.cs" />
      <Compile Include="Assets\script\CameraController.cs" />
      <Compile Include="Assets\script\Dialog_Dor.cs" />
+     <Compile Include="Assets\script\EnterScence.cs" />
      <Compile Include="Assets\script\PlayerMovementController.cs" />
      <Compile Include="Assets\script\dialog_Animation_Controller.cs" />
      <Compile Include="Assets\script\enemy_Controller.cs" />
