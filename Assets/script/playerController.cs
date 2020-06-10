@@ -45,11 +45,19 @@ public class playerController : MonoBehaviour
         SwitchAnimation();
     }
 
+    void Update()
+    {
+        Jump();   //趴姿动画函数
+        crouch();//调用下面的趴姿函数
+        CherryNum.text = cherry.ToString();
+        GemNum.text = Gem.ToString();
+    }
+
     void Movement()//人物移动函数
     {
         float horizontalmove = Input.GetAxis("Horizontal");
         float facedirection = Input.GetAxisRaw("Horizontal");
-        //水平上给刚体赋予移动力
+        //水平上给刚体赋予力
         rb.velocity = new Vector2(horizontalmove * speed * Time.fixedDeltaTime, rb.velocity.y);
 
         //人物移动
@@ -61,8 +69,7 @@ public class playerController : MonoBehaviour
         //人物移动动画
         anim.SetFloat("running",Mathf.Abs(facedirection));
 
-        //趴姿动画
-        crouch();//调用下面的趴姿函数
+        
         /*
         if(Input.GetKey(KeyCode.S))
         {
@@ -72,15 +79,6 @@ public class playerController : MonoBehaviour
             anim.SetBool("crouching",false);
         }
         */
-        //人物跳跃
-        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
-        {
-            jumpcheck++;
-            rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.fixedDeltaTime);
-            jumpAudio.Play();
-            anim.SetBool("jumping",true);
-            anim.SetBool("crouching",false);
-        }
         
     }
 
@@ -157,22 +155,24 @@ public class playerController : MonoBehaviour
         if(other.tag == "collection")
         {
             collectionAudio.Play();
-            Destroy(other.gameObject);
-            cherry++;
-            CherryNum.text = cherry.ToString();
+            //Destroy(other.gameObject);
+            //cherry++;//转下面的函数
+            other.GetComponent<Animator>().Play("itemGetAnimation");
+            //CherryNum.text = cherry.ToString();
         }
         if(other.tag == "Gem")
         {
             collectionAudio.Play();
-            Destroy(other.gameObject);
-            Gem++;
-            GemNum.text = Gem.ToString();
+            //Destroy(other.gameObject);
+            //Gem++;
+            other.GetComponent<Animator>().Play("itemGetAnimation");
+            //GemNum.text = Gem.ToString();
 
         }
         if(other.tag == "DeadLine")//添加角色死亡条件碰撞检测
         {
-            GetComponent<AudioSource>().enabled = false;
-            Invoke("Restart",2f);
+            GetComponent<AudioSource>().enabled = false;//死亡停止音乐播放
+            Invoke("Restart",2f);//延迟两秒执行
         }
     }
 
@@ -200,6 +200,29 @@ public class playerController : MonoBehaviour
                 isHurt = true;
             }
         }      
+    }
+
+    void Jump()//人物跳跃
+    {
+        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
+        {
+            jumpcheck++;
+            rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.deltaTime);
+            jumpAudio.Play();
+            anim.SetBool("jumping",true);
+            anim.SetBool("crouching",false);
+        }
+        
+    }
+
+    public void cherryGet()
+    {
+        cherry++;
+    }
+
+    public void gemGet()
+    {
+        Gem++;
     }
 
     private void Restart()

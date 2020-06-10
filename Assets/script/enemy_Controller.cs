@@ -15,6 +15,7 @@ public class enemy_Controller : MonoBehaviour
 
     public void Death()//敌人死亡
     {
+        GetComponent<Collider2D>().enabled = false;//死亡后禁用碰撞体避免二次碰撞
         Destroy(gameObject);
     }
 
