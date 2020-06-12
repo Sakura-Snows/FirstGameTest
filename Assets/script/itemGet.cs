@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class itemGet : MonoBehaviour
 {
-   public void Death()
+   public void Death()//物品被
    {
        if(gameObject.tag == "collection")
        {

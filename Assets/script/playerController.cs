@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-//Version Record V0.6.8-Alpha TimeVersion Start on 2020-6-8
+//Version Record V0.6.11-Alpha TimeVersion Start on 2020-6-8
 public class playerController : MonoBehaviour
 {
     //人物控制类
@@ -215,17 +215,17 @@ public class playerController : MonoBehaviour
         
     }
 
-    public void cherryGet()
+    public void cherryGet()//碰撞到樱桃时增加数字
     {
         cherry++;
     }
 
-    public void gemGet()
+    public void gemGet()//碰撞到宝石时增加数字
     {
         Gem++;
     }
 
-    private void Restart()
+    private void Restart()//碰撞到死亡判定后调用函数，重新执行游戏
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
