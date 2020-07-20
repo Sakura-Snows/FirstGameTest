@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-//Version Record V0.6.11-Alpha TimeVersion Start on 2020-6-8
+//Version Record V0.7.20-Alpha TimeVersion Start on 2020-6-8
 public class playerController : MonoBehaviour
 {
     //人物控制类
     [SerializeField]private Rigidbody2D rb;
     [SerializeField]private Animator anim;
-    private bool isHurt;
     public AudioSource jumpAudio,hurtAudio,collectionAudio;
     //物理判定类
     [Space]
@@ -21,8 +20,11 @@ public class playerController : MonoBehaviour
     public int cherry = 0;
     public int Gem = 0;
     public int jumpcheck=0;
-    public Transform cellingCheck;
+    public Transform cellingCheck,groundCheck;
     private bool headCheck = false;
+    private bool isHurt;//默认false
+    private bool isGround;//默认false
+    private int jumpCount;
     //UI类
     [Space]
     public Text CherryNum;
@@ -43,11 +45,12 @@ public class playerController : MonoBehaviour
             Movement();
         }
         SwitchAnimation();
+        isGround = Physics2D.OverlapCircle(groundCheck.position,0.2f,ground);
     }
 
     void Update()
     {
-        Jump();   //趴姿动画函数
+        newJump();   
         crouch();//调用下面的趴姿函数
         CherryNum.text = cherry.ToString();
         GemNum.text = Gem.ToString();
@@ -94,7 +97,7 @@ public class playerController : MonoBehaviour
         }
         if(headCheck)
         {
-            if(!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))
+            if(!Physics2D.OverlapCircle(cellingCheck.position,0.2f,ground))//检测头顶是否有障碍物，没有才允许站起来
             {
                 disColl.enabled = true;
                 anim.SetBool("crouching",false);
@@ -184,7 +187,7 @@ public class playerController : MonoBehaviour
             if(anim.GetBool("falling"))
             {
                 enemy.JumpOn();//用父类完成物体销毁
-                rb.velocity = new Vector2(rb.velocity.x, jumpforce * Time.fixedDeltaTime);
+                rb.velocity = new Vector2(rb.velocity.x, jumpforce);
                 anim.SetBool("jumping",true);
                 anim.SetBool("crouching",false);
             }else if(transform.position.x < other.transform.position.x)//实现与敌人碰撞时受伤的效果
@@ -201,7 +204,7 @@ public class playerController : MonoBehaviour
             }
         }      
     }
-
+    /*
     void Jump()//人物跳跃
     {
         if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
@@ -213,6 +216,27 @@ public class playerController : MonoBehaviour
             anim.SetBool("crouching",false);
         }
         
+    }
+    */
+    void newJump()
+    {
+        if(isGround == true)
+        {
+            jumpCount = 1;
+        }
+        if(Input.GetButtonDown("Jump") && jumpCount > 0)
+        {
+            rb.velocity = Vector2.up * jumpforce;
+            jumpCount --;
+            anim.SetBool("jumping",true);
+            anim.SetBool("crouching",false);
+        }
+        if(Input.GetButtonDown("Jump") && jumpCount == 0 && isGround)
+        {
+           rb.velocity = Vector2.up * jumpforce; 
+           anim.SetBool("jumping",true);
+           anim.SetBool("crouching",false);
+        }
     }
 
     public void cherryGet()//碰撞到樱桃时增加数字
