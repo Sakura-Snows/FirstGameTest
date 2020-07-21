@@ -82,8 +82,10 @@
      <Compile Include="Assets\script\CameraController.cs" />
      <Compile Include="Assets\script\Dialog_Dor.cs" />
      <Compile Include="Assets\script\EnterScence.cs" />
+     <Compile Include="Assets\script\FinalPlayerController.cs" />
      <Compile Include="Assets\script\Menu.cs" />
      <Compile Include="Assets\script\PlayerMovementController.cs" />
+     <Compile Include="Assets\script\SoundMananger.cs" />
      <Compile Include="Assets\script\dialog_Animation_Controller.cs" />
      <Compile Include="Assets\script\enemy_Controller.cs" />
      <Compile Include="Assets\script\enemy_Frog.cs" />

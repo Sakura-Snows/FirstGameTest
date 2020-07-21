@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-//Version Record V0.7.20-Alpha TimeVersion Start on 2020-6-8
+//Version Record V0.7.21-Alpha TimeVersion Start on 2020-6-8
 public class playerController : MonoBehaviour
 {
     //人物控制类
     [SerializeField]private Rigidbody2D rb;
     [SerializeField]private Animator anim;
-    public AudioSource jumpAudio,hurtAudio,collectionAudio;
+//    public AudioSource jumpAudio,hurtAudio,collectionAudio;
     //物理判定类
     [Space]
     public float speed;
@@ -157,7 +157,8 @@ public class playerController : MonoBehaviour
     {
         if(other.tag == "collection")
         {
-            collectionAudio.Play();
+            //collectionAudio.Play();
+            SoundMananger.sound_class.CollectionAudio();//播放收集音效
             //Destroy(other.gameObject);
             //cherry++;//转下面的函数
             other.GetComponent<Animator>().Play("itemGetAnimation");
@@ -165,7 +166,8 @@ public class playerController : MonoBehaviour
         }
         if(other.tag == "Gem")
         {
-            collectionAudio.Play();
+            //collectionAudio.Play();
+             SoundMananger.sound_class.CollectionAudio();//播放收集音效
             //Destroy(other.gameObject);
             //Gem++;
             other.GetComponent<Animator>().Play("itemGetAnimation");
@@ -183,23 +185,25 @@ public class playerController : MonoBehaviour
     {   
         if(other.gameObject.tag == "enemy")//消灭敌人的方法和碰撞敌人产生的效果 
         {
-            enemy_Controller enemy = other.gameObject.GetComponent<enemy_Controller>();//申明父类
+            enemy_Controller enemy = other.gameObject.GetComponent<enemy_Controller>();//申明父类，将enemy_Controller类通过enemy实例化
             if(anim.GetBool("falling"))
             {
-                enemy.JumpOn();//用父类完成物体销毁
+                enemy.JumpOn();//用实例化类完成物体销毁
                 rb.velocity = new Vector2(rb.velocity.x, jumpforce);
                 anim.SetBool("jumping",true);
                 anim.SetBool("crouching",false);
             }else if(transform.position.x < other.transform.position.x)//实现与敌人碰撞时受伤的效果
             {
                 rb.velocity = new Vector2(-5,rb.velocity.y);
-                hurtAudio.Play();
+                //hurtAudio.Play();
+                SoundMananger.sound_class.HurtAudio();//播放受伤音效
                 isHurt = true;
                 
             }else if(transform.position.x > other.transform.position.x)
             {
                 rb.velocity = new Vector2(5,rb.velocity.y);
-                hurtAudio.Play();
+                //hurtAudio.Play();
+                SoundMananger.sound_class.HurtAudio();//播放受伤音效
                 isHurt = true;
             }
         }      
@@ -218,22 +222,24 @@ public class playerController : MonoBehaviour
         
     }
     */
-    void newJump()
+    void newJump()//新的跳跃函数，支持二段跳，改善跳跃手感
     {
         if(isGround == true)
         {
             jumpCount = 1;
         }
-        if(Input.GetButtonDown("Jump") && jumpCount > 0)
+        if(Input.GetButtonDown("Jump") && jumpCount > 0)//判断是否还有再次跳跃的机会
         {
             rb.velocity = Vector2.up * jumpforce;
             jumpCount --;
+            SoundMananger.sound_class.JumpAudio();//播放跳跃的声音
             anim.SetBool("jumping",true);
             anim.SetBool("crouching",false);
         }
-        if(Input.GetButtonDown("Jump") && jumpCount == 0 && isGround)
+        if(Input.GetButtonDown("Jump") && jumpCount == 0 && isGround)//最后一次跳跃后且判断在地上时
         {
            rb.velocity = Vector2.up * jumpforce; 
+           SoundMananger.sound_class.JumpAudio();
            anim.SetBool("jumping",true);
            anim.SetBool("crouching",false);
         }
